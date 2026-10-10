@@ -88,6 +88,15 @@
     text-wrap: balance;
   }
 
+  /* Scrollable strip without a visible scrollbar (product carousel). */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Opening letter of the introduction, set in the display serif. */
   .drop-cap::first-letter {
     @apply font-display text-sage-deep;

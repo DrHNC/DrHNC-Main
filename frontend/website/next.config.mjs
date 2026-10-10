@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        // Product photos for the home page carousel come from the shop.
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "shop.drhasannasir.com",
+                pathname: "/wp-content/uploads/**",
+            },
+        ],
+    },
     async headers() {
         return [
             {

@@ -8,6 +8,7 @@ import {
     WhatsAppIcon,
     YouTubeIcon,
 } from "@/components/SocialIcons";
+import ProductCarousel from "@/components/ProductCarousel";
 import SectionDivider from "@/components/SectionDivider";
 import WhatsAppFloatButton from "@/components/WhatsAppFloatButton";
 import {
@@ -17,6 +18,7 @@ import {
     PRODUCT_PHONE,
     WHATSAPP_URL,
 } from "@/lib/contact";
+import { getShopProducts } from "@/lib/shop";
 import { BRAND_LOGO, CLINIC_ADDRESS } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -56,8 +58,9 @@ const assurances = [
 const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61582055819875";
 const YOUTUBE_URL = "https://www.youtube.com/@dr.hasannasir9200/";
 
-export default function HomePage() {
+export default async function HomePage() {
     const waLink = WHATSAPP_URL;
+    const products = await getShopProducts();
 
     return (
         <>
@@ -224,97 +227,102 @@ export default function HomePage() {
                 id="zaade-sehat"
                 className="px-7 py-14 md:py-18 bg-paper"
             >
-                <div className="mx-auto max-w-content grid gap-10 md:grid-cols-[1fr_320px] md:items-center">
-                    <div>
-                        <span className="font-mono text-[0.78rem] tracking-[0.12em] uppercase text-sage-deep">
-                            Zaade Sehat
-                        </span>
-                        <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.1rem)] max-w-[22ch]">
-                            Food is the first medicine
-                        </h2>
-                        <p className="mt-4 max-w-[58ch] text-[1.02rem] text-ink-soft">
-                            Zaade Sehat is Dr. Hasan Nasir Cheema&apos;s range of
-                            natural food and wellness products, from plant-based
-                            powders to functional foods and traditional wellness
-                            products, chosen by a physician.
-                        </p>
-                        <ul className="mt-6 space-y-2.5 list-none p-0">
-                            {assurances.map((a) => (
-                                <li
-                                    key={a}
-                                    className="flex items-center gap-3 text-[0.98rem] text-ink"
+                <div className="mx-auto max-w-content">
+                    <div className="grid gap-10 md:grid-cols-[1fr_320px] md:items-center">
+                        <div>
+                            <span className="font-mono text-[0.78rem] tracking-[0.12em] uppercase text-sage-deep">
+                                Zaade Sehat
+                            </span>
+                            <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.1rem)] max-w-[22ch]">
+                                Food is the first medicine
+                            </h2>
+                            <p className="mt-4 max-w-[58ch] text-[1.02rem] text-ink-soft">
+                                Zaade Sehat is Dr. Hasan Nasir Cheema&apos;s range of
+                                natural food and wellness products, from plant-based
+                                powders to functional foods and traditional wellness
+                                products, chosen by a physician.
+                            </p>
+                            <ul className="mt-6 space-y-2.5 list-none p-0">
+                                {assurances.map((a) => (
+                                    <li
+                                        key={a}
+                                        className="flex items-center gap-3 text-[0.98rem] text-ink"
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            viewBox="0 0 20 20"
+                                            className="h-5 w-5 shrink-0 fill-sage"
+                                        >
+                                            <path d="M10 1.7a8.3 8.3 0 1 0 0 16.6 8.3 8.3 0 0 0 0-16.6Zm3.9 6.2-4.6 4.9a.9.9 0 0 1-1.3 0l-2-2.1a.9.9 0 1 1 1.3-1.2l1.4 1.4 3.9-4.2a.9.9 0 1 1 1.3 1.2Z" />
+                                        </svg>
+                                        {a}
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                                <Link
+                                    href="/products"
+                                    className="group inline-flex items-center gap-2 rounded-full bg-honey px-6 py-3.5 text-[0.95rem] font-semibold text-white no-underline shadow-sm transition-colors duration-200 hover:bg-forest-deep hover:text-white hover:shadow-md hover:no-underline active:shadow-inner active:brightness-95"
                                 >
+                                    Visit the shop
                                     <svg
                                         aria-hidden="true"
                                         viewBox="0 0 20 20"
-                                        className="h-5 w-5 shrink-0 fill-sage"
+                                        className="h-4 w-4 fill-current transition-transform duration-200 group-hover:translate-x-1"
                                     >
-                                        <path d="M10 1.7a8.3 8.3 0 1 0 0 16.6 8.3 8.3 0 0 0 0-16.6Zm3.9 6.2-4.6 4.9a.9.9 0 0 1-1.3 0l-2-2.1a.9.9 0 1 1 1.3-1.2l1.4 1.4 3.9-4.2a.9.9 0 1 1 1.3 1.2Z" />
+                                        <path d="M10.6 4.3a1 1 0 0 0-1.4 1.4L12.1 9H4a1 1 0 1 0 0 2h8.1l-2.9 3.3a1 1 0 0 0 1.4 1.4l4.6-4.4a1 1 0 0 0 0-1.6l-4.6-4.4Z" />
                                     </svg>
-                                    {a}
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-                            <Link
-                                href="/products"
-                                className="group inline-flex items-center gap-2 rounded-full bg-honey px-6 py-3.5 text-[0.95rem] font-semibold text-white no-underline shadow-sm transition-colors duration-200 hover:bg-forest-deep hover:text-white hover:shadow-md hover:no-underline active:shadow-inner active:brightness-95"
-                            >
-                                Visit the shop
-                                <svg
-                                    aria-hidden="true"
-                                    viewBox="0 0 20 20"
-                                    className="h-4 w-4 fill-current transition-transform duration-200 group-hover:translate-x-1"
-                                >
-                                    <path d="M10.6 4.3a1 1 0 0 0-1.4 1.4L12.1 9H4a1 1 0 1 0 0 2h8.1l-2.9 3.3a1 1 0 0 0 1.4 1.4l4.6-4.4a1 1 0 0 0 0-1.6l-4.6-4.4Z" />
-                                </svg>
-                            </Link>
-                            <p className="text-[0.9rem] text-ink-soft">
-                                Product questions:{" "}
-                                <a
-                                    href={PRODUCT_PHONE.whatsapp}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="tabular-nums text-sage-deep"
-                                >
-                                    {PRODUCT_PHONE.display}
-                                </a>{" "}
-                                ·{" "}
-                                <a
-                                    href={`mailto:${PRODUCT_EMAIL}`}
+                                </Link>
+                                <p className="text-[0.9rem] text-ink-soft">
+                                    Product questions:{" "}
+                                    <a
+                                        href={PRODUCT_PHONE.whatsapp}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="tabular-nums text-sage-deep"
+                                    >
+                                        {PRODUCT_PHONE.display}
+                                    </a>{" "}
+                                    ·{" "}
+                                    <a
+                                        href={`mailto:${PRODUCT_EMAIL}`}
+                                        className="text-sage-deep"
+                                    >
+                                        {PRODUCT_EMAIL}
+                                    </a>
+                                </p>
+                            </div>
+                            <p className="mt-6 max-w-[64ch] text-[0.85rem] text-ink-soft">
+                                Zaade Sehat products support a balanced diet and are
+                                not a substitute for medical treatment. See the{" "}
+                                <Link
+                                    href="/health-product-disclaimer"
                                     className="text-sage-deep"
                                 >
-                                    {PRODUCT_EMAIL}
-                                </a>
+                                    Health Product Disclaimer
+                                </Link>
+                                .
                             </p>
                         </div>
-                        <p className="mt-6 max-w-[64ch] text-[0.85rem] text-ink-soft">
-                            Zaade Sehat products support a balanced diet and are
-                            not a substitute for medical treatment. See the{" "}
-                            <Link
-                                href="/health-product-disclaimer"
-                                className="text-sage-deep"
-                            >
-                                Health Product Disclaimer
-                            </Link>
-                            .
-                        </p>
+
+                        <div className="relative mx-auto w-full max-w-[260px] md:max-w-[320px]">
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-6 -z-10 rounded-full bg-sage/25 blur-3xl"
+                            />
+                            <Image
+                                src={BRAND_LOGO}
+                                alt="Zaade Sehat by Dr. Hasan Nasir: Food is the First Medicine, 100% natural and pure"
+                                width={795}
+                                height={900}
+                                sizes="(max-width: 768px) 260px, 320px"
+                                className="h-auto w-full drop-shadow-xl"
+                            />
+                        </div>
                     </div>
 
-                    <div className="relative mx-auto w-full max-w-[260px] md:max-w-[320px]">
-                        <div
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-6 -z-10 rounded-full bg-sage/25 blur-3xl"
-                        />
-                        <Image
-                            src={BRAND_LOGO}
-                            alt="Zaade Sehat by Dr. Hasan Nasir: Food is the First Medicine, 100% natural and pure"
-                            width={795}
-                            height={900}
-                            sizes="(max-width: 768px) 260px, 320px"
-                            className="h-auto w-full drop-shadow-xl"
-                        />
-                    </div>
+                    {/* Live product list from the shop; hidden if the shop is unreachable */}
+                    {products.length > 0 && <ProductCarousel products={products} />}
                 </div>
             </RevealSection>
 
