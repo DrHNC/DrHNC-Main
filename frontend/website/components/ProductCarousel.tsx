@@ -21,7 +21,9 @@ export default function ProductCarousel({
         const el = track.current;
         if (!el) return;
         const card = el.querySelector("li");
-        const step = card ? card.getBoundingClientRect().width + 20 : el.clientWidth;
+        const step = card
+            ? card.getBoundingClientRect().width + 20
+            : el.clientWidth;
         el.scrollBy({ left: direction * step, behavior: "smooth" });
     };
 
@@ -42,7 +44,11 @@ export default function ProductCarousel({
                         aria-controls="product-track"
                         className={arrow}
                     >
-                        <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 fill-current">
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 20 20"
+                            className="h-4 w-4 fill-current"
+                        >
                             <path d="M9.4 4.3a1 1 0 0 1 1.4 1.4L7.9 9H16a1 1 0 1 1 0 2H7.9l2.9 3.3a1 1 0 0 1-1.4 1.4L4.8 11.3a1 1 0 0 1 0-1.6l4.6-4.4Z" />
                         </svg>
                     </button>
@@ -53,7 +59,11 @@ export default function ProductCarousel({
                         aria-controls="product-track"
                         className={arrow}
                     >
-                        <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 fill-current">
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 20 20"
+                            className="h-4 w-4 fill-current"
+                        >
                             <path d="M10.6 4.3a1 1 0 0 0-1.4 1.4L12.1 9H4a1 1 0 1 0 0 2h8.1l-2.9 3.3a1 1 0 0 0 1.4 1.4l4.6-4.4a1 1 0 0 0 0-1.6l-4.6-4.4Z" />
                         </svg>
                     </button>

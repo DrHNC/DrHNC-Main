@@ -36,12 +36,20 @@ type StoreApiProduct = {
  */
 const DISPLAY_NAMES: Record<number, string> = {
     1816: "Dr. Hasan's Signature Blend",
-    1184: "Daily Seed Mix",
+    1184: "Premium Mixed Seed",
     1183: "Moringa Powder",
     1182: "Triphala Powder",
     1181: "Ashwagandha Powder",
     1100: "Psyllium Husk",
     1099: "Quinoa & Gram Flour",
+};
+
+/**
+ * Product photos kept on this site instead of the shop's, keyed by shop
+ * product ID. Used where a newer photo exists than the one on the shop.
+ */
+const LOCAL_IMAGES: Record<number, string> = {
+    1184: "/images/products/premium-mixed-seed.webp",
 };
 
 // Products that are not Zaade Sehat goods, such as the old booking fee.
@@ -96,8 +104,8 @@ function toProduct(p: StoreApiProduct): ShopProduct {
     return {
         id: p.id,
         name,
-        image: p.images[0].src,
-        imageAlt: clean(p.images[0].alt || "") || name,
+        image: LOCAL_IMAGES[p.id] ?? p.images[0].src,
+        imageAlt: clean(p.images[0]?.alt || "") || name,
         url: p.permalink,
         signature: SIGNATURE.test(p.name),
         description: p.short_description
@@ -111,7 +119,7 @@ function toProduct(p: StoreApiProduct): ShopProduct {
 }
 
 /**
- * In-stock Zaade Sehat products with images, signature products first.
+ * In-stock Zaade Sehat products with a photo, signature products first.
  * Refreshed hourly. Returns an empty list if the shop cannot be reached, so
  * the home page still renders.
  */
@@ -128,8 +136,7 @@ export async function getShopProducts(): Promise<ShopProduct[]> {
             .filter(
                 (p) =>
                     p.is_in_stock &&
-                    p.is_purchasable &&
-                    p.images?.length > 0 &&
+                    (p.images?.length > 0 || p.id in LOCAL_IMAGES) &&
                     !EXCLUDE.test(p.name),
             )
             .map(toProduct)
