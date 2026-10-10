@@ -1,0 +1,326 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-ink;
+    /* Fraunces carries an optical-size axis; large sizes get display
+       proportions automatically where the browser supports it. */
+    font-optical-sizing: auto;
+  }
+
+  h1 {
+    letter-spacing: -0.022em;
+  }
+
+  h2 {
+    letter-spacing: -0.016em;
+  }
+
+  h3 {
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    @apply text-sage-deep no-underline;
+  }
+
+  /* Underline that wipes in from the left on hover. Uses a background
+     gradient rather than text-decoration so it can be animated. */
+  a:not([class*="no-underline"]) {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0 1px;
+    transition: background-size 0.25s ease;
+    padding-bottom: 1px;
+  }
+
+  a:not([class*="no-underline"]):hover {
+    background-size: 100% 1px;
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a:not([class*="no-underline"]) {
+      transition: none;
+    }
+  }
+
+  ::selection {
+    @apply bg-sage text-white;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline-none ring-2 ring-honey-deep ring-offset-1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Opening letter of the introduction, set in the display serif. */
+  .drop-cap::first-letter {
+    @apply font-display text-sage-deep;
+    float: left;
+    font-size: 3.1em;
+    line-height: 0.86;
+    font-weight: 600;
+    padding-right: 0.08em;
+    margin-top: 0.05em;
+  }
+
+  /* Reading progress bar, driven by the scroll timeline. Browsers without
+     scroll-driven animations simply never paint it. */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    height: 3px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    @apply bg-sage;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @keyframes scroll-progress-grow {
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .scroll-progress {
+      animation: scroll-progress-grow linear;
+      animation-timeline: scroll();
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-progress {
+      display: none;
+    }
+  }
+
+  /* Scroll-linked reveal. The animation is tied to the element's own
+     position in the viewport, so it runs at the reader's scroll speed on
+     any device and never depends on a timer or a scroll listener.
+     Browsers without scroll-driven animations show the content normally. */
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal-on-scroll {
+        animation: reveal-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 28%;
+      }
+
+      /* Shorter travel on phones, where the viewport is small and a long
+         rise reads as jumpy. */
+      @media (max-width: 640px) {
+        @keyframes reveal-rise {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+
+  /* Route change: the incoming page fades in. Opacity only — a transform
+     here would make the wrapper the containing block for every fixed child,
+     which strands the floating WhatsApp button inside the page. */
+  @keyframes route-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .route-fade {
+    animation: route-fade 0.28s ease-out both;
+  }
+
+  /* Placeholder for content that has not painted yet: an image still
+     downloading, a map iframe, or a slow route. The sweep marks it as
+     pending rather than broken. */
+  @keyframes skeleton-sweep {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  .skeleton {
+    background-color: theme("colors.mist");
+    background-image: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 20%,
+      rgba(255, 255, 255, 0.65) 50%,
+      rgba(255, 255, 255, 0) 80%
+    );
+    background-size: 200% 100%;
+    background-position: 200% 0;
+    background-repeat: no-repeat;
+    animation: skeleton-sweep 1.6s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .route-fade {
+      animation: none;
+    }
+
+    .skeleton {
+      background-image: none;
+      animation: none;
+    }
+  }
+
+  /* Card lift: transform and shadow only, so neighbours never move. */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .card-hover:hover {
+    transform: scale(1.01);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-hover,
+    .card-hover:hover {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  @keyframes reveal {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: reveal 0.6s ease forwards;
+  }
+
+  .reveal-d1 {
+    animation-delay: 0.05s;
+  }
+
+  .reveal-d2 {
+    animation-delay: 0.15s;
+  }
+
+  .reveal-d3 {
+    animation-delay: 0.25s;
+  }
+}
+
+/* Scroll-triggered section reveals (used by RevealSection component) */
+/* Bidirectional: fades in on enter, fades out on exit */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.section-reveal.section-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Printing: policy pages should come out as plain documents. */
+@media print {
+  header,
+  footer,
+  iframe {
+    display: none !important;
+  }
+
+  .section-reveal,
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  a {
+    color: #000;
+    background-image: none;
+  }
+
+  main a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
+  }
+
+  section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}

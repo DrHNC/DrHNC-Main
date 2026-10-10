@@ -1,0 +1,83 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Legal Information",
+    description:
+        "Policies and legal information for Dr. Hasan Nasir Cheema's consultation services and Zaade Sehat product shop.",
+    alternates: { canonical: "/legal" },
+};
+
+const policies = [
+    {
+        href: "/privacy-policy",
+        title: "Privacy Policy",
+        description: "How we collect, use, and protect your information.",
+    },
+    {
+        href: "/terms-of-service",
+        title: "Terms & Conditions",
+        description: "Terms for website use, consultations, and purchases.",
+    },
+    {
+        href: "/refund-cancellation-policy",
+        title: "Refunds & Cancellations",
+        description: "Final-sale terms for products, order cancellation, and appointment changes.",
+    },
+    {
+        href: "/shipping-delivery-policy",
+        title: "Shipping & Delivery",
+        description: "Delivery information for products from the online shop.",
+    },
+    {
+        href: "/health-product-disclaimer",
+        title: "Health Disclaimer",
+        description:
+            "Important information about health and wellness products.",
+    },
+    {
+        href: "/cookie-policy",
+        title: "Cookie Policy",
+        description: "How this website uses cookies and similar technologies.",
+    },
+];
+
+export default function LegalPage() {
+    return (
+        <section className="px-7 py-14 md:py-18">
+            <div className="mx-auto max-w-content">
+                <span className="font-mono text-[0.78rem] tracking-[0.12em] uppercase text-sage-deep">
+                    Legal
+                </span>
+                <h1 className="mt-3 text-[clamp(1.8rem,4vw,2.6rem)] font-semibold">
+                    Policies &amp; legal information
+                </h1>
+                <p className="mt-4 max-w-[58ch] text-ink-soft">
+                    Read the policies that apply to consultation services with
+                    Dr. Hasan Nasir Cheema and to products sold separately
+                    through Zaade Sehat by Dr. Hasan Nasir Cheema.
+                </p>
+
+                <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {policies.map((policy) => (
+                        <Link
+                            key={policy.href}
+                            href={policy.href}
+                            className="reveal-on-scroll group card-hover rounded-xl border border-line-soft bg-paper-raised p-5 shadow-sm no-underline hover:border-forest-deep hover:shadow-md hover:no-underline"
+                        >
+                            <h2 className="font-display text-[1.15rem] font-semibold text-ink group-hover:text-sage-deep">
+                                {policy.title}
+                            </h2>
+                            <p className="mt-2 text-[0.9rem] leading-relaxed text-ink-soft">
+                                {policy.description}
+                            </p>
+                            <span className="mt-4 inline-block text-[0.88rem] font-semibold text-sage-deep">
+                                Read policy &rarr;
+                            </span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
