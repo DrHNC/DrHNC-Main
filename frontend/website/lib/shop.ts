@@ -1,18 +1,20 @@
 // Reads Zaade Sehat products from the shop's public WooCommerce Store API, so
-// the home page carousel always matches what the shop is actually selling.
+// the home page always matches what the shop is actually selling.
 
 import { SHOP_URL } from "@/lib/site";
 
 export type ShopProduct = {
     id: number;
+    /** Short English name, e.g. "Moringa Powder". */
     name: string;
-    urduName?: string;
-    tagline?: string;
-    price: string;
     image: string;
     imageAlt: string;
     url: string;
     signature: boolean;
+    /** Plain-text short description from the shop. */
+    description?: string;
+    /** Pack sizes on offer, e.g. ["130 grams", "250 grams"]. */
+    sizes: string[];
 };
 
 type StoreApiProduct = {
@@ -21,19 +23,30 @@ type StoreApiProduct = {
     permalink: string;
     is_in_stock: boolean;
     is_purchasable: boolean;
-    prices: {
-        price: string;
-        currency_minor_unit: number;
-        price_range: { min_amount: string; max_amount: string } | null;
-    };
     images: { src: string; alt: string }[];
+    short_description?: string;
+    attributes?: { name: string; terms?: { name: string }[] }[];
+};
+
+/**
+ * Short English display names, keyed by shop product ID. The shop's own names
+ * are long ("Moringa Powder (مورنگا / سوہانجنا پاؤڈر) | Nutrient-Rich Miracle
+ * Tree Superfood"). A product missing from this list falls back to the
+ * English part of its shop name.
+ */
+const DISPLAY_NAMES: Record<number, string> = {
+    1816: "Dr. Hasan's Signature Blend",
+    1184: "Daily Seed Mix",
+    1183: "Moringa Powder",
+    1182: "Triphala Powder",
+    1181: "Ashwagandha Powder",
+    1100: "Psyllium Husk",
+    1099: "Quinoa & Gram Flour",
 };
 
 // Products that are not Zaade Sehat goods, such as the old booking fee.
 const EXCLUDE = /consultation|booking|appointment/i;
 const SIGNATURE = /signature/i;
-// An Urdu name in brackets at the end of the English one, e.g. "Moringa (مورنگا)".
-const URDU_SUFFIX = /\s*\(([^()]*[؀-ۿ][^()]*)\)\s*$/;
 
 // WordPress stores some characters as HTML entities, such as "&#038;" for "&".
 const NAMED_ENTITIES: Record<string, string> = {
@@ -58,35 +71,42 @@ function decodeEntities(text: string): string {
     });
 }
 
-function formatPrice(minor: string, unit: number): string {
-    const value = Number(minor) / 10 ** unit;
-    return `Rs ${value.toLocaleString("en-PK", { maximumFractionDigits: 0 })}`;
+// The shop spells the brand several ways; show one spelling on this site.
+const BRAND_VARIANTS = /\b(?:Zaad\s*e|Zadeh)\s+Sehat\b/gi;
+
+function clean(text: string): string {
+    return decodeEntities(text).replace(BRAND_VARIANTS, "Zaade Sehat").trim();
+}
+
+function plainText(html: string): string {
+    return clean(html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
+}
+
+/** English part of a shop name: before " | " and before any bracketed Urdu. */
+function englishName(shopName: string): string {
+    return clean(shopName)
+        .split(" | ")[0]
+        .replace(/\s*\([^()]*[؀-ۿ][^()]*\)\s*$/, "")
+        .trim();
 }
 
 function toProduct(p: StoreApiProduct): ShopProduct {
-    const [main, tagline] = decodeEntities(p.name)
-        .split(" | ")
-        .map((s) => s.trim());
-    const urdu = main.match(URDU_SUFFIX);
-    const name = urdu ? main.replace(URDU_SUFFIX, "").trim() : main;
-
-    const unit = p.prices.currency_minor_unit;
-    const range = p.prices.price_range;
-    const price =
-        range && range.min_amount !== range.max_amount
-            ? `From ${formatPrice(range.min_amount, unit)}`
-            : formatPrice(p.prices.price, unit);
+    const name = DISPLAY_NAMES[p.id] ?? englishName(p.name);
 
     return {
         id: p.id,
         name,
-        urduName: urdu?.[1].trim(),
-        tagline,
-        price,
         image: p.images[0].src,
-        imageAlt: decodeEntities(p.images[0].alt || "") || name,
+        imageAlt: clean(p.images[0].alt || "") || name,
         url: p.permalink,
-        signature: SIGNATURE.test(name),
+        signature: SIGNATURE.test(p.name),
+        description: p.short_description
+            ? plainText(p.short_description) || undefined
+            : undefined,
+        sizes:
+            p.attributes
+                ?.find((a) => /weight|size/i.test(a.name))
+                ?.terms?.map((t) => clean(t.name)) ?? [],
     };
 }
 

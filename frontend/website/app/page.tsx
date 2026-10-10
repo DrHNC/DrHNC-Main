@@ -10,6 +10,7 @@ import {
 } from "@/components/SocialIcons";
 import ProductCarousel from "@/components/ProductCarousel";
 import SectionDivider from "@/components/SectionDivider";
+import SignatureSpotlight from "@/components/SignatureSpotlight";
 import WhatsAppFloatButton from "@/components/WhatsAppFloatButton";
 import {
     CLINIC_PHONE,
@@ -61,6 +62,9 @@ const YOUTUBE_URL = "https://www.youtube.com/@dr.hasannasir9200/";
 export default async function HomePage() {
     const waLink = WHATSAPP_URL;
     const products = await getShopProducts();
+    // The signature product gets its own spotlight; the carousel shows the rest.
+    const signature = products.find((p) => p.signature);
+    const others = products.filter((p) => p !== signature);
 
     return (
         <>
@@ -322,7 +326,13 @@ export default async function HomePage() {
                     </div>
 
                     {/* Live product list from the shop; hidden if the shop is unreachable */}
-                    {products.length > 0 && <ProductCarousel products={products} />}
+                    {signature && <SignatureSpotlight product={signature} />}
+                    {others.length > 0 && (
+                        <ProductCarousel
+                            products={others}
+                            title={signature ? "More from Zaade Sehat" : undefined}
+                        />
+                    )}
                 </div>
             </RevealSection>
 

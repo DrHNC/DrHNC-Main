@@ -10,8 +10,10 @@ import type { ShopProduct } from "@/lib/shop";
  */
 export default function ProductCarousel({
     products,
+    title = "Zaade Sehat products",
 }: {
     products: ShopProduct[];
+    title?: string;
 }) {
     const track = useRef<HTMLUListElement>(null);
 
@@ -30,7 +32,7 @@ export default function ProductCarousel({
         <div className="mt-12">
             <div className="flex items-end justify-between gap-4">
                 <h3 className="font-display text-[1.25rem] font-semibold text-ink">
-                    Zaade Sehat products
+                    {title}
                 </h3>
                 <div className="flex gap-2">
                     <button
@@ -87,32 +89,10 @@ export default function ProductCarousel({
                                     </span>
                                 )}
                             </div>
-                            <div className="flex flex-1 flex-col p-4">
+                            <div className="p-4">
                                 <p className="font-body text-[1rem] font-semibold leading-snug text-ink">
                                     {p.name}
                                 </p>
-                                {p.urduName && (
-                                    <p
-                                        lang="ur"
-                                        dir="rtl"
-                                        className="mt-0.5 text-right text-[0.9rem] text-ink-soft"
-                                    >
-                                        {p.urduName}
-                                    </p>
-                                )}
-                                {p.tagline && (
-                                    <p className="mt-1.5 text-[0.88rem] text-ink-soft">
-                                        {p.tagline}
-                                    </p>
-                                )}
-                                <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                                    <span className="tabular-nums text-[0.95rem] font-semibold text-forest-deep">
-                                        {p.price}
-                                    </span>
-                                    <span className="text-[0.85rem] font-semibold text-honey-deep">
-                                        View product
-                                    </span>
-                                </div>
                             </div>
                         </a>
                     </li>
