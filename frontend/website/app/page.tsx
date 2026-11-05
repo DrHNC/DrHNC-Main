@@ -171,8 +171,6 @@ export default async function HomePage() {
                                 <p className="flex flex-wrap gap-x-3 gap-y-1.5 font-mono text-[0.8rem] font-semibold tracking-[0.1em] uppercase text-sage-deep mb-6">
                                     <span>MBBS (King Edward)</span>
                                     <span aria-hidden="true">·</span>
-                                    <span>BMJ England</span>
-                                    <span aria-hidden="true">·</span>
                                     <span>M.Phil Human Biochem</span>
                                     <span aria-hidden="true">·</span>
                                     <span>Food and Nutrition Expert</span>

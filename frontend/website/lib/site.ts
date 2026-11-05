@@ -45,7 +45,6 @@ const PERSON = {
     jobTitle: "Consultant Physician",
     hasCredential: [
         "MBBS (King Edward)",
-        "BMJ England",
         "M.Phil Human Biochemistry",
     ],
 };

@@ -60,7 +60,7 @@ export default function Navbar() {
                             Consultant Physician
                         </small>
                         <small className="block font-body text-[0.65rem] font-normal tracking-[0.08em] text-paper/75 mt-0.5">
-                            MBBS · BMJ · M.Phil · Food &amp; Nutrition
+                            MBBS · M.Phil · Food &amp; Nutrition
                         </small>
                     </span>
                 </Link>
